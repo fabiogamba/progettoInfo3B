@@ -11,10 +11,13 @@ import java.util.Observer;
 public class ProgettoView extends JFrame implements Observer{
 	// Campi della view
     private JTextField m_userInputCF = new JTextField(16);
-    private JTextField m_userInputCod    = new JTextField(10);
-    private JButton    m_submitBtn = new JButton("Invia");
-    private JButton    m_clearBtn    = new JButton("Cancella");
+    private JTextField m_userInputCod = new JTextField(10);
+    private JButton m_submitBtn = new JButton("Invia");
+    private JButton m_clearBtn = new JButton("Cancella");
     private JLabel m_message = new JLabel("");
+    JPanel maincontent = new JPanel();
+    JPanel maincontent2 = new JPanel();
+    JFrame jF = new JFrame("Inserisci dati");
     
     // Riferimento a model
     private ProgettoModel m_model;
@@ -32,7 +35,8 @@ public class ProgettoView extends JFrame implements Observer{
         //m_totalTf.setEditable(false);
         
         // Layout dei componenti  
-        JPanel maincontent = new JPanel();
+        //JPanel maincontent = new JPanel();
+        //JPanel maincontent2 = new JPanel();
         JPanel textcontent = new JPanel();
         JPanel textcontentExt = new JPanel();
         JPanel buttoncontent = new JPanel();
@@ -40,6 +44,9 @@ public class ProgettoView extends JFrame implements Observer{
         maincontent.setBorder(new EmptyBorder(10, 10, 10, 10));
         maincontent.setLayout(new BorderLayout());
         maincontent.setPreferredSize(new Dimension(400, 250));
+        maincontent2.setBorder(new EmptyBorder(10, 10, 10, 10));
+        maincontent2.setLayout(new BorderLayout());
+        maincontent2.setPreferredSize(new Dimension(400, 250));
         textcontentExt.setLayout(new FlowLayout());
         textcontent.setLayout(new GridLayout(0, 1));
         textcontent.setPreferredSize(new Dimension(300,  150));
@@ -57,13 +64,17 @@ public class ProgettoView extends JFrame implements Observer{
         maincontent.add(textcontentExt, BorderLayout.CENTER);
         maincontent.add(buttoncontent, BorderLayout.SOUTH);
         
+        maincontent2.add(new JLabel("porcoddio"));
+        
         // Creo il contenitore...
-        this.setContentPane(maincontent);
-        this.pack();
+        //jF.setContentPane(maincontent);
+        jF.getContentPane().add(maincontent);
+        jF.pack();
+        jF.setVisible(true);
         // Imposto il titolo alla view
-        this.setTitle("Inserisci info");
+        //jF.setTitle("Inserisci info");
         // Imposto il meccanismo di chiusura sulla finestra
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jF.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
         
     /*
@@ -103,18 +114,41 @@ public class ProgettoView extends JFrame implements Observer{
     // quando l'osservato (il modello) effettua una notifica
 	@Override
 	public void update(Observable o, Object arg) {
-		update();		
+		if(arg == "reset")
+			updateReset();
+		else
+			updateCheck();
 	}
 	
     // Permette di fare l'update dall'esterno.
     // In questo caso è l'azione compiuta dalla GUI quando il model 
 	// (che è stato impostato come Observable) effettua una notifica
-	private void update() {
+	private void updateReset() {
 		// Estraggo il valore corrente della "memoria" del modello dal
 		// riferimento al modello e aggiorno il textField.
 		System.out.println("[VIEW] Notified by the model");
-		m_message.setText(m_model.getError());
+		//m_message.setText(m_model.getError());
 		m_userInputCF.setText(m_model.getValue());
 		m_userInputCod.setText(m_model.getValue());
+		//this.setContentPane(maincontent2);
+	}
+	
+	private void updateCheck() {
+		// Estraggo il valore corrente della "memoria" del modello dal
+		// riferimento al modello e aggiorno il textField.
+		System.out.println("[VIEW] Notified by the model");
+		if(!(m_model.getError().equals(""))) { 
+			m_message.setText(m_model.getError());
+			}
+		else {
+			jF.getContentPane().remove(maincontent);
+			jF.getContentPane().add(maincontent2);
+			jF.revalidate();
+			jF.repaint();
+		}
+		
+		//m_userInputCF.setText(m_model.getValue());
+		//m_userInputCod.setText(m_model.getValue());
+			
 	}
 }

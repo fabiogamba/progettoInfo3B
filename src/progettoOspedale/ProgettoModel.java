@@ -20,7 +20,7 @@ public class ProgettoModel extends Observable{
 			// Comunica un cambio dello stato
 			setChanged();
 			// Notifica gli observer (la view)
-			notifyObservers();
+			notifyObservers("reset");
 			System.out.println("[MODEL] Observers notified (reset)");
 		}
 
@@ -39,7 +39,7 @@ public class ProgettoModel extends Observable{
 			// Comunica un cambio dello stato
 			setChanged();
 			// Notifica gli observer (la view)
-			notifyObservers();
+			notifyObservers("check");
 			System.out.println("[MODEL] Observers notified (mult)");
 		}
 		

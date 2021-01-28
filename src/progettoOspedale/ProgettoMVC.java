@@ -10,6 +10,6 @@ public class ProgettoMVC {
 		// Creo il controller passando il rif al model e alla view
 		ProgettoController controller = new ProgettoController(model, view);
 		// Rendo visibile la view
-		view.setVisible(true);
+		//view.setVisible(true);
 	}
 }
