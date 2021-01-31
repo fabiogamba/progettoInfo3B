@@ -4,6 +4,12 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import com.github.lgooddatepicker.components.TimePicker;
+import com.github.lgooddatepicker.components.TimePickerSettings;
+import com.github.lgooddatepicker.optionalusertools.DateVetoPolicy;
+
 import java.awt.event.*;
 import java.util.Observable;
 import java.util.Observer;
@@ -14,10 +20,16 @@ public class ProgettoView extends JFrame implements Observer{
     private JTextField m_userInputCod = new JTextField(10);
     private JButton m_submitBtn = new JButton("Invia");
     private JButton m_clearBtn = new JButton("Cancella");
+    private JButton m_submitBtn2 = new JButton("Invia");
+    private JButton m_clearBtn2 = new JButton("Cancella");
     private JLabel m_message = new JLabel("");
-    JPanel maincontent = new JPanel();
-    JPanel maincontent2 = new JPanel();
+    JPanel infopanel = new JPanel();
+    JPanel datepick = new JPanel();
     JFrame jF = new JFrame("Inserisci dati");
+    DatePicker datePicker;
+    TimePicker timePicker;
+    DatePickerSettings dateSettings = new DatePickerSettings();
+    TimePickerSettings timeSettings = new TimePickerSettings();
     
     // Riferimento a model
     private ProgettoModel m_model;
@@ -40,35 +52,65 @@ public class ProgettoView extends JFrame implements Observer{
         JPanel textcontent = new JPanel();
         JPanel textcontentExt = new JPanel();
         JPanel buttoncontent = new JPanel();
+        JPanel buttoncontent2 = new JPanel();
+        JPanel datecontent = new JPanel();
         
-        maincontent.setBorder(new EmptyBorder(10, 10, 10, 10));
-        maincontent.setLayout(new BorderLayout());
-        maincontent.setPreferredSize(new Dimension(400, 250));
-        maincontent2.setBorder(new EmptyBorder(10, 10, 10, 10));
-        maincontent2.setLayout(new BorderLayout());
-        maincontent2.setPreferredSize(new Dimension(400, 250));
+        dateSettings.setAllowKeyboardEditing(false);
+        //dateSettings.setVetoPolicy(null);
+        datePicker = new DatePicker(dateSettings);
+        timeSettings.setAllowKeyboardEditing(false);
+        timePicker = new TimePicker(timeSettings);
+
+        
+        
+        infopanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        infopanel.setLayout(new BorderLayout());
+        infopanel.setPreferredSize(new Dimension(400, 250));
+        
+        datepick.setBorder(new EmptyBorder(10, 10, 10, 10));
+        datepick.setLayout(new BorderLayout());
+        datepick.setPreferredSize(new Dimension(200, 250));
+        
         textcontentExt.setLayout(new FlowLayout());
+        
         textcontent.setLayout(new GridLayout(0, 1));
         textcontent.setPreferredSize(new Dimension(300,  150));
+        
+        datecontent.setLayout(new GridLayout(0, 1));
+        //datecontent.setPreferredSize(new Dimension(100,  200));
+        
         //textcontent.setBorder(new EmptyBorder(10, 10, 10, 10));
         textcontent.add(new JLabel("Codice fiscale"));
         textcontent.add(m_userInputCF);
         textcontent.add(new JLabel("Codice ricetta"));
         textcontent.add(m_userInputCod);
         textcontent.add(m_message);
+        
         buttoncontent.setLayout(new FlowLayout());
         buttoncontent.add(m_submitBtn);
         buttoncontent.add(m_clearBtn);
         
-        textcontentExt.add(textcontent);
-        maincontent.add(textcontentExt, BorderLayout.CENTER);
-        maincontent.add(buttoncontent, BorderLayout.SOUTH);
+        buttoncontent2.setLayout(new FlowLayout());
+        buttoncontent2.add(m_submitBtn2);
+        buttoncontent2.add(m_clearBtn2);
         
-        maincontent2.add(new JLabel("porcoddio"));
+        datecontent.add(new JLabel("Scegli una data"));
+        datecontent.add(datePicker);
+        datecontent.add(new JLabel("Scegli un orario"));
+        datecontent.add(timePicker);
+        
+        //date.setPreferredSize(new Dimension(300,  150));
+        
+        textcontentExt.add(textcontent);
+        infopanel.add(textcontentExt, BorderLayout.CENTER);
+        infopanel.add(buttoncontent, BorderLayout.SOUTH);
+        
+        datepick.add(datecontent, BorderLayout.NORTH);
+        datepick.add(buttoncontent2, BorderLayout.SOUTH);
         
         // Creo il contenitore...
         //jF.setContentPane(maincontent);
-        jF.getContentPane().add(maincontent);
+        jF.getContentPane().add(infopanel);
         jF.pack();
         jF.setVisible(true);
         // Imposto il titolo alla view
@@ -141,8 +183,8 @@ public class ProgettoView extends JFrame implements Observer{
 			m_message.setText(m_model.getError());
 			}
 		else {
-			jF.getContentPane().remove(maincontent);
-			jF.getContentPane().add(maincontent2);
+			jF.getContentPane().remove(infopanel);
+			jF.getContentPane().add(datepick);
 			jF.revalidate();
 			jF.repaint();
 		}
