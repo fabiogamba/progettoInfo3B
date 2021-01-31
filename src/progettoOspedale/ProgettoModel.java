@@ -34,10 +34,13 @@ public class ProgettoModel extends Observable{
 			//m_total = m_total * new Integer(operand);
 			//System.out.println("[MODEL] Multiply "+ operand);
 			System.out.println("ricevuto: " + cf + " " + cod);
-			if(cf.length() != 16)
-				setError("Codice fiscale sbagliato");
-			else
-				setError("");
+			if(cf.length() != 0 && cod.length() != 0) {
+				if(cf.length() != 16)
+					setError("Codice fiscale sbagliato");
+				else
+					setError("");
+			}else
+				setError("Tutti i campi sono obbligatori");
 			// Comunica un cambio dello stato
 			setChanged();
 			// Notifica gli observer (la view)
@@ -50,7 +53,7 @@ public class ProgettoModel extends Observable{
 			// Comunica un cambio dello stato
 			setChanged();
 			// Notifica gli observer (la view)
-			notifyObservers("check");
+			notifyObservers("datefree");
 			System.out.println("[MODEL] Observers notified (mult)");
 		}
 		

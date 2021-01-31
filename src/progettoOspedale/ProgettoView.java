@@ -179,8 +179,10 @@ public class ProgettoView extends JFrame implements Observer{
 	public void update(Observable o, Object arg) {
 		if(arg == "reset")
 			updateReset();
-		else
+		else if(arg == "check")
 			updateCheck();
+		else if(arg == "datefree")
+			updateDate();
 	}
 	
     // Permette di fare l'update dall'esterno.
@@ -208,6 +210,25 @@ public class ProgettoView extends JFrame implements Observer{
 		else {
 			jF.getContentPane().remove(infopanel);
 			jF.getContentPane().add(datepick);
+			jF.revalidate();
+			jF.repaint();
+		}
+		
+		//m_userInputCF.setText(m_model.getValue());
+		//m_userInputCod.setText(m_model.getValue());
+			
+	}
+	
+	private void updateDate() {
+		// Estraggo il valore corrente della "memoria" del modello dal
+		// riferimento al modello e aggiorno il textField.
+		System.out.println("[VIEW] Notified by the model");
+		if(!(m_model.getError().equals(""))) { 
+			m_message.setText(m_model.getError());
+			}
+		else {
+			jF.getContentPane().remove(datepick);
+			jF.getContentPane().add(infopanel);
 			jF.revalidate();
 			jF.repaint();
 		}
