@@ -1,5 +1,7 @@
 package progettoOspedale;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Observable;
 
 public class ProgettoModel extends Observable{
@@ -36,6 +38,15 @@ public class ProgettoModel extends Observable{
 				setError("Codice fiscale sbagliato");
 			else
 				setError("");
+			// Comunica un cambio dello stato
+			setChanged();
+			// Notifica gli observer (la view)
+			notifyObservers("check");
+			System.out.println("[MODEL] Observers notified (mult)");
+		}
+		
+		public void checkDate(LocalDate d, LocalTime t) {
+			System.out.println("ricevuto: " + d + " " + t);
 			// Comunica un cambio dello stato
 			setChanged();
 			// Notifica gli observer (la view)

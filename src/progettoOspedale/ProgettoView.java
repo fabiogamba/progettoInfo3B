@@ -8,9 +8,13 @@ import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.TimePicker;
 import com.github.lgooddatepicker.components.TimePickerSettings;
+import com.github.lgooddatepicker.components.TimePickerSettings.TimeIncrement;
 import com.github.lgooddatepicker.optionalusertools.DateVetoPolicy;
 
 import java.awt.event.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -30,6 +34,7 @@ public class ProgettoView extends JFrame implements Observer{
     TimePicker timePicker;
     DatePickerSettings dateSettings = new DatePickerSettings();
     TimePickerSettings timeSettings = new TimePickerSettings();
+    LocalDate today = LocalDate.now();
     
     // Riferimento a model
     private ProgettoModel m_model;
@@ -56,9 +61,11 @@ public class ProgettoView extends JFrame implements Observer{
         JPanel datecontent = new JPanel();
         
         dateSettings.setAllowKeyboardEditing(false);
-        //dateSettings.setVetoPolicy(null);
         datePicker = new DatePicker(dateSettings);
+        dateSettings.setVetoPolicy(null);
+        dateSettings.setDateRangeLimits(today, today);
         timeSettings.setAllowKeyboardEditing(false);
+        timeSettings.generatePotentialMenuTimes(TimeIncrement.ThirtyMinutes, LocalTime.of(8, 00), LocalTime.of(17, 00));
         timePicker = new TimePicker(timeSettings);
 
         
@@ -135,7 +142,15 @@ public class ProgettoView extends JFrame implements Observer{
     
     String getUserCod() {
         return m_userInputCod.getText();
-    }   
+    }
+    
+    LocalDate getDate() {
+    	return datePicker.getDate();
+    }
+    
+    LocalTime getTime() {
+    	return timePicker.getTime();
+    }
     
     // Rende disponibile all'esterno l'eventuale testo del messaggio di errore 
     void showError(String errMessage) {
@@ -147,9 +162,15 @@ public class ProgettoView extends JFrame implements Observer{
         m_submitBtn.addActionListener(mal);
     }
     
+    void submitDate(ActionListener mal) {
+        m_submitBtn2.addActionListener(mal);
+    }
+
+    
     // Permette di impostare dall'esterno il listener del bottone clear
     void addClearListener(ActionListener cal) {
         m_clearBtn.addActionListener(cal);
+        m_clearBtn2.addActionListener(cal);
     }
 
 	// Ereditato da Observer, chiama il metodo update definito localmente 
@@ -172,6 +193,8 @@ public class ProgettoView extends JFrame implements Observer{
 		//m_message.setText(m_model.getError());
 		m_userInputCF.setText(m_model.getValue());
 		m_userInputCod.setText(m_model.getValue());
+		datePicker.clear();
+		timePicker.clear();
 		//this.setContentPane(maincontent2);
 	}
 	

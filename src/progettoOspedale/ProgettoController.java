@@ -1,6 +1,9 @@
 package progettoOspedale;
 
 import java.awt.event.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Date;
 
 public class ProgettoController {
 	//Riferimenti, il controller deve interagire sia con la view che con il modello
@@ -17,6 +20,7 @@ public class ProgettoController {
         //Aggiungo i listener (definiti qui) alla view attraverso i metodi appositi 
         //messi a disposizione della view
         view.submitInfo(new checkInfo());
+        view.submitDate(new checkDate());
         view.addClearListener(new ClearListener());
     }
     
@@ -37,6 +41,21 @@ public class ProgettoController {
             userInputCod = m_view.getUserCod();
             //uso il riferimento al modello per fargli eseguire la moltiplicazione
             m_model.checkInfo(userInputCF, userInputCod);
+            //m_view.showError(m_model.getError());
+        }
+    }
+    
+    class checkDate implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+        	System.out.println("[Controller]Submit date action");
+            LocalDate userDate = null;
+            LocalTime userTime = null;
+        	//uso il riferimento alla view per catturare l'input
+        	//inserito dall'utente
+            userDate = m_view.getDate();
+            userTime = m_view.getTime();
+            //uso il riferimento al modello per fargli eseguire la moltiplicazione
+            m_model.checkDate(userDate, userTime);
             //m_view.showError(m_model.getError());
         }
     }
