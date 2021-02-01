@@ -50,12 +50,16 @@ public class ProgettoController {
         	System.out.println("[Controller]Submit date action");
             LocalDate userDate = null;
             LocalTime userTime = null;
+            String cf = "";
+            String cr = "";
         	//uso il riferimento alla view per catturare l'input
         	//inserito dall'utente
             userDate = m_view.getDate();
             userTime = m_view.getTime();
+            cf = m_view.getUserCF();
+            cr = m_view.getUserCod();
             //uso il riferimento al modello per fargli eseguire la moltiplicazione
-            m_model.checkDate(userDate, userTime);
+            m_model.checkDate(userDate, userTime, cf, cr);
             //m_view.showError(m_model.getError());
         }
     }

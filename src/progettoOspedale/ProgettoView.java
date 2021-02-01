@@ -34,7 +34,10 @@ public class ProgettoView extends JFrame implements Observer{
     TimePicker timePicker;
     DatePickerSettings dateSettings = new DatePickerSettings();
     TimePickerSettings timeSettings = new TimePickerSettings();
+    JPanel eventpanel = new JPanel();
     LocalDate today = LocalDate.now();
+    JLabel eventData = new JLabel();
+    JLabel eventTime = new JLabel();
     
     // Riferimento a model
     private ProgettoModel m_model;
@@ -59,6 +62,10 @@ public class ProgettoView extends JFrame implements Observer{
         JPanel buttoncontent = new JPanel();
         JPanel buttoncontent2 = new JPanel();
         JPanel datecontent = new JPanel();
+        JPanel eventinfo = new JPanel();
+        
+        //JLabel eventData = new JLabel();
+        //JLabel eventTime = new JLabel();
         
         dateSettings.setAllowKeyboardEditing(false);
         datePicker = new DatePicker(dateSettings);
@@ -78,6 +85,10 @@ public class ProgettoView extends JFrame implements Observer{
         datepick.setLayout(new BorderLayout());
         datepick.setPreferredSize(new Dimension(200, 250));
         
+        eventpanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        eventpanel.setLayout(new BorderLayout());
+        eventpanel.setPreferredSize(new Dimension(400, 250));
+        
         textcontentExt.setLayout(new FlowLayout());
         
         textcontent.setLayout(new GridLayout(0, 1));
@@ -85,6 +96,9 @@ public class ProgettoView extends JFrame implements Observer{
         
         datecontent.setLayout(new GridLayout(0, 1));
         //datecontent.setPreferredSize(new Dimension(100,  200));
+        
+        eventinfo.setLayout(new GridLayout(0, 1));
+        eventinfo.setPreferredSize(new Dimension(300,  150));
         
         //textcontent.setBorder(new EmptyBorder(10, 10, 10, 10));
         textcontent.add(new JLabel("Codice fiscale"));
@@ -106,6 +120,11 @@ public class ProgettoView extends JFrame implements Observer{
         datecontent.add(new JLabel("Scegli un orario"));
         datecontent.add(timePicker);
         
+        eventinfo.add(new JLabel("Data visita"));
+        eventinfo.add(eventData);
+        eventinfo.add(new JLabel("Orario visita"));
+        eventinfo.add(eventTime);
+        
         //date.setPreferredSize(new Dimension(300,  150));
         
         textcontentExt.add(textcontent);
@@ -114,6 +133,9 @@ public class ProgettoView extends JFrame implements Observer{
         
         datepick.add(datecontent, BorderLayout.NORTH);
         datepick.add(buttoncontent2, BorderLayout.SOUTH);
+        
+        eventpanel.add(eventinfo, BorderLayout.NORTH);
+        //eventpanel.add(buttoncontent2, BorderLayout.SOUTH);
         
         // Creo il contenitore...
         //jF.setContentPane(maincontent);
@@ -177,12 +199,15 @@ public class ProgettoView extends JFrame implements Observer{
     // quando l'osservato (il modello) effettua una notifica
 	@Override
 	public void update(Observable o, Object arg) {
-		if(arg == "reset")
+		String args[] = (String[]) arg;
+		if(args[0] == "reset")
 			updateReset();
-		else if(arg == "check")
+		else if(args[0] == "check")
 			updateCheck();
-		else if(arg == "datefree")
+		else if(args[0] == "datefree")
 			updateDate();
+		else if(args[0] == "already")
+			updateShow(args[1], args[2]);
 	}
 	
     // Permette di fare l'update dall'esterno.
@@ -229,6 +254,27 @@ public class ProgettoView extends JFrame implements Observer{
 		else {
 			jF.getContentPane().remove(datepick);
 			jF.getContentPane().add(infopanel);
+			jF.revalidate();
+			jF.repaint();
+		}
+		
+		//m_userInputCF.setText(m_model.getValue());
+		//m_userInputCod.setText(m_model.getValue());
+			
+	}
+	
+	private void updateShow(String cf, String cr) {
+		// Estraggo il valore corrente della "memoria" del modello dal
+		// riferimento al modello e aggiorno il textField.
+		System.out.println("[VIEW] Notified by the model");
+		if(!(m_model.getError().equals(""))) { 
+			//m_message.setText("");
+			}
+		else {
+			eventData.setText(cf);
+			eventTime.setText(cr);
+			jF.getContentPane().remove(infopanel);
+			jF.getContentPane().add(eventpanel);
 			jF.revalidate();
 			jF.repaint();
 		}
