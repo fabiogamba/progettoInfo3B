@@ -1,19 +1,34 @@
 package progettoOspedale;
 
 import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.TimePicker;
 import com.github.lgooddatepicker.components.TimePickerSettings;
 import com.github.lgooddatepicker.components.TimePickerSettings.TimeIncrement;
+import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 import com.github.lgooddatepicker.optionalusertools.DateVetoPolicy;
+import com.github.lgooddatepicker.optionalusertools.PickerUtilities;
+import com.github.lgooddatepicker.optionalusertools.TimeVetoPolicy;
+import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
@@ -30,10 +45,10 @@ public class ProgettoView extends JFrame implements Observer{
     JPanel infopanel = new JPanel();
     JPanel datepick = new JPanel();
     JFrame jF = new JFrame("Inserisci dati");
-    DatePicker datePicker;
+    public DatePicker datePicker;
     TimePicker timePicker;
-    DatePickerSettings dateSettings = new DatePickerSettings();
-    TimePickerSettings timeSettings = new TimePickerSettings();
+    DatePickerSettings dateSettings;
+    TimePickerSettings timeSettings;
     JPanel eventpanel = new JPanel();
     LocalDate today = LocalDate.now();
     JLabel eventData = new JLabel();
@@ -67,13 +82,21 @@ public class ProgettoView extends JFrame implements Observer{
         //JLabel eventData = new JLabel();
         //JLabel eventTime = new JLabel();
         
-        dateSettings.setAllowKeyboardEditing(false);
+        dateSettings = new DatePickerSettings();
         datePicker = new DatePicker(dateSettings);
-        dateSettings.setVetoPolicy(null);
-        dateSettings.setDateRangeLimits(today, today);
-        timeSettings.setAllowKeyboardEditing(false);
-        timeSettings.generatePotentialMenuTimes(TimeIncrement.ThirtyMinutes, LocalTime.of(8, 00), LocalTime.of(17, 00));
+        datePicker.addDateChangeListener(new SampleDateChangeListener("Ciao"));
+        dateSettings.setAllowKeyboardEditing(false);
+        //dateSettings.setAllowEmptyDates(false);
+        dateSettings.setVetoPolicy(new SampleDateVetoPolicy());
+        //dateSettings.setDateRangeLimits(today, null);
+        //timeSettings.setAllowKeyboardEditing(false);
+        //timeSettings.generatePotentialMenuTimes(TimeIncrement.ThirtyMinutes, LocalTime.of(8, 00), LocalTime.of(17, 00));
+        timeSettings = new TimePickerSettings();
         timePicker = new TimePicker(timeSettings);
+        timeSettings.setAllowKeyboardEditing(false);
+        //dateSettings.setAllowEmptyDates(false);
+        timeSettings.setVetoPolicy(new SampleTimeVetoPolicy());
+        
 
         
         
@@ -146,6 +169,64 @@ public class ProgettoView extends JFrame implements Observer{
         //jF.setTitle("Inserisci info");
         // Imposto il meccanismo di chiusura sulla finestra
         jF.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    private static class SampleDateVetoPolicy implements DateVetoPolicy {
+
+        /**
+         * isDateAllowed, Return true if a date should be allowed, or false if a date should be
+         * vetoed.
+         */
+        @Override
+        public boolean isDateAllowed(LocalDate date) {
+        	
+        	LocalDate now = LocalDate.now();
+        	//System.out.println(date.toString());
+            // Disallow days 7 to 11.
+            if(date.isBefore(now))
+            	return false;
+            // Allow all other days.
+            return true;
+        }
+    }
+    
+    private static class SampleTimeVetoPolicy implements TimeVetoPolicy {
+
+		@Override
+		public boolean isTimeAllowed(LocalTime time) {
+			
+        	return PickerUtilities.isLocalTimeInRange(
+                    time, LocalTime.of(8, 00), LocalTime.of(17, 00), true);
+		}
+
+    }
+    
+    private static class SampleDateChangeListener implements DateChangeListener {
+
+        /**
+         * datePickerName, This holds a chosen name for the date picker that we are listening to,
+         * for generating date change messages in the demo.
+         */
+        public String datePickerName;
+
+        /**
+         * Constructor.
+         */
+        private SampleDateChangeListener(String datePickerName) {
+            this.datePickerName = datePickerName;
+        }
+
+        /**
+         * dateChanged, This function will be called each time that the date in the applicable date
+         * picker has changed. Both the old date, and the new date, are supplied in the event
+         * object. Note that either parameter may contain null, which represents a cleared or empty
+         * date.
+         */
+        @Override
+        public void dateChanged(DateChangeEvent event) {
+        	//timeSettings.setVetoPolicy(new SampleTimeVetoPolicy());
+        	System.out.println(datePickerName);
+        }
     }
         
     /*

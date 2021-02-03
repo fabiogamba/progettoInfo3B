@@ -32,9 +32,11 @@ public class ProgettoModel extends Observable{
 		// Campo privato, la "memoria" vera e propria del modello 
 		private String clearString; 
 		private String error;
+		public String visits[];
 
 		// Costruttore: chiama il reset per (re)impostare il valore inizale
 		ProgettoModel() {
+			//visits[0] = new String("2021/02/03" + "08:00");
 			reset();
 		}
 		

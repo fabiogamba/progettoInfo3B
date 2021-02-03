@@ -10,6 +10,18 @@
           <cf>ssssssssssssssss</cf>
           <cr>123456</cr>
           <data>2021/02/01</data>
-          <ora>11:00</ora>
+          <ora>11:30</ora>
+     </visita>
+     <visita>
+          <cf>ssssssssssssssss</cf>
+          <cr>5453</cr>
+          <data>2021/02/06</data>
+          <ora>09:30</ora>
+     </visita>
+     <visita>
+          <cf>ssssssssssssssss</cf>
+          <cr>1</cr>
+          <data>2021/02/13</data>
+          <ora>11:30</ora>
      </visita>
 </evento>
